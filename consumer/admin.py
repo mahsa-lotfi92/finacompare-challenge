@@ -4,7 +4,7 @@ from consumer.models import Contact
 
 
 @admin.register(Contact)
-class QuestionTextAdmin(admin.ModelAdmin):
-    list_display = ['email', 'name', 'test']
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ['email', 'name']
     search_fields = ['name', 'email']
     readonly_fields = ['email', 'name']
