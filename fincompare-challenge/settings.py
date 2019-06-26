@@ -76,11 +76,11 @@ WSGI_APPLICATION = 'fincompare-challenge.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'fincompare-challenge',
-        'USER': 'fincompare',
-        'PASSWORD': 'fincompare',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'db-name',
+        'USER': 'username',
+        'PASSWORD': 'password',
+        'HOST': 'host',
+        'PORT': 'port',
     }
 }
 
@@ -123,3 +123,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
