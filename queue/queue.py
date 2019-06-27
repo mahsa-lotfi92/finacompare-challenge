@@ -5,9 +5,10 @@ class QChannel:
     def __init__(self, q_name):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         self.channel = self.connection.channel()
-        self.channel.queue_declare(queue=q_name, durable=True)
+        self.channel.queue_declare(queue=q_name, durable=True)  # queue would be safe if rabbit shuts down by durability
         self.q_name = q_name
-        self.channel.basic_qos(prefetch_count=1)
+        self.channel.basic_qos(prefetch_count=1)  # prevent having some busy queues while others have ended their tasks
+        # by sending the tasks one by one
 
     def __enter__(self):
         return self
@@ -20,7 +21,7 @@ class QChannel:
                                    routing_key=q_name,
                                    body=message,
                                    properties=pika.BasicProperties(
-                                       delivery_mode=2,  # make message persistent
+                                       delivery_mode=2,  # make message persistent in case shut downs and other problems
                                    ))
         print(f'{message} received in queue {self.q_name}')
 
@@ -33,8 +34,9 @@ class QChannel:
     @staticmethod
     def receiver_callback(callback):
         def res(*args, **kwargs):
-            print(" [x] Received %r" % args[3])
+            print(f'Received {args[3]}')
             callback(*args, **kwargs)
-            args[0].basic_ack(delivery_tag=args[1].delivery_tag)
+            args[0].basic_ack(delivery_tag=args[1].delivery_tag)  # the queue would remove a task
+            # after getting acknowledgement
 
         return res
