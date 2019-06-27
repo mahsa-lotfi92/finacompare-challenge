@@ -64,4 +64,17 @@ You can name the db any name you want.
 Run this command as many time as the number of clients for processing the queue you need.
 
 
-    
+# What do I do if I have more time
+
+1- In a bigger scale project,  maybe it would be better to use celery for managing rabbitmq.
+
+Since celery provides more ability to manage and handle many more complex situations. 
+
+For example there would be any other tasks to be done that
+need to be managed in addition to these task. Or maybe we need 
+to better managing queues and assigning tasks to queues.
+
+2- A more specified definition of queues and settings based on the volume 
+of data that can be transferred and the available resources.
+
+3- Providing a url to send the files of contacts information maybe a good idea.

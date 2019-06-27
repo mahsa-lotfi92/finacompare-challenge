@@ -1,8 +1,5 @@
 import pika
 
-# todo: for a real product, maybe it would be better to use celery for managing rabbitmq.
-# Since celery provides more ability to manage and handle many more complex situations.
-
 
 class QChannel:
     def __init__(self, q_name):
