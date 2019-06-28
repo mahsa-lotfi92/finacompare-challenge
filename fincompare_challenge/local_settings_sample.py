@@ -10,3 +10,4 @@ DATABASES = {
 }
 
 RABBIT_CONNECTION_HOST = 'localhost'
+RABBITMQ_QUEUE_NAME = 'emails'

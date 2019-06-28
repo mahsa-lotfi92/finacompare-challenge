@@ -1,6 +1,7 @@
 import argparse
 import logging
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from fincompare_challenge.feeder.reader import Reader
 
@@ -19,6 +20,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for file in options['csv_files']:
-            Reader('emails').file_to_queue(file)
+            # todo: we can get the queue name as an input
+            Reader(settings.RABBITMQ_QUEUE_NAME).file_to_queue(file)
             logger.info(f'{file} has been read.')
 

@@ -149,6 +149,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 RABBIT_CONNECTION_HOST = 'Please set this!'
+RABBITMQ_QUEUE_NAME = 'please set the queue name!'
 
 try:
     from .local_settings import *

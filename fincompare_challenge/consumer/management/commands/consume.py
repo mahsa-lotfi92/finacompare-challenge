@@ -1,19 +1,14 @@
-import json
 import logging
 
-from fincompare_challenge.consumer.models import Contact
+from fincompare_challenge.consumer.consume import Consumer
 from django.core.management.base import BaseCommand
-from django.db.utils import IntegrityError
-from fincompare_challenge.queue.queue import QChannel
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        def callback(ch, method, properties, body):
-            obj = json.loads(body)
-            Contact.objects.create(email=obj['email'], defaults={'name': obj['name']})
-
-        QChannel('emails').start_receiving(callback)
+        # todo: we can get the queue name as an input
+        Consumer(settings.RABBITMQ_QUEUE_NAME).start_receiving()
 

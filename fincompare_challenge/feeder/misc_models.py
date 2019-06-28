@@ -13,3 +13,11 @@ class ContactData:
 
     def to_json(self):
         return json.dumps(self.__dict__)
+
+    @staticmethod
+    def from_json(data):
+        data = json.loads(data)
+        if 'email' not in data or 'name' not in data:
+            raise Exception(f'The date could not convert to a Contact Data')
+
+        return ContactData(name=data['name'], email=data['email'])

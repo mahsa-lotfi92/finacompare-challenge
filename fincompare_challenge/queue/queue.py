@@ -44,6 +44,7 @@ class QChannel:
                 callback(channel, method, properties, body)
                 channel.basic_ack(delivery_tag=method.delivery_tag)  # the queue would remove a task
                 # after getting acknowledgement
+                logger.info(f'{body} has been proceeded successfully.')
             except Exception as ex:
                 logger.error(str(ex))
                 # In case of exception in running call back, We retry the task by nack. But if the task is redelivered,
