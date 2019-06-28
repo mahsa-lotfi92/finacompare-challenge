@@ -52,9 +52,11 @@ You can name the db any name you want.
     python manage.py migrate
 
     
-11- To run feeder, place data csv file in the root of project and run this command at the root of project.
+11- To run feeder, place data csv files in the root of project and run this command at the root of project.
 
-    python manage.py read_data
+    python manage.py read_data csv_file_1 csv_file_2 ...
+    
+if you do not provide any file name it reads data_example.csv by default.
     
 
 12- To run consumer, run the following command at the root of project. 
