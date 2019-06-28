@@ -7,7 +7,8 @@ class Consumer:
     @staticmethod
     def callback(ch, method, properties, body):
         obj = ContactData.from_json(data=body)
-        Contact.objects.create(email=obj.email, defaults={'name': obj.name})
+        Contact.objects.update_or_create(email=obj.email, defaults={'name': obj.name})
+        # save the latest name for repeated emails.
 
     def __init__(self, q_name):
         self.q_name = q_name
