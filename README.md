@@ -36,6 +36,10 @@ send its data to a queue.
 7- Create user for project in postgres with any desirable password.
     
     createuser fincompare -P
+
+to run tests, run this sql to allow the user create test database.
+    
+    psql -d postgres -c 'ALTER USER fincompare CREATEDB'
     
 you can set any username and password.
 
