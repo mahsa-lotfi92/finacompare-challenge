@@ -80,3 +80,6 @@ to better managing queues and assigning tasks to queues.
 of data that can be transferred and the available resources.
 
 3- Providing a url to send the files of contacts information maybe a good idea.
+
+4- Working on a solution to retry failures in consumer with specified retries or any other ideas.
+
