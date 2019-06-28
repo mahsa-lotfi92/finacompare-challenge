@@ -15,10 +15,10 @@ class Command(BaseCommand):
         return file_name
 
     def add_arguments(self, parser):
-        parser.add_argument('csv_file', nargs='?', type=self.csv_file_name, default='data_example.csv')
+        parser.add_argument('csv_files', nargs='*', type=self.csv_file_name, default=['data_example.csv'])
 
     def handle(self, *args, **options):
-
-        Reader('emails').file_to_queue('data_example.csv')
-        logger.info(msg='File has been read.')
+        for file in options['csv_files']:
+            Reader('emails').file_to_queue(file)
+            logger.info(f'{file} has been read.')
 

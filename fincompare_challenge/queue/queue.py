@@ -1,12 +1,14 @@
 import pika
 import logging
 
+from django.conf import settings
+
 logger = logging.getLogger(__name__)
 
 
 class QChannel:
     def __init__(self, q_name):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(settings.RABBIT_CONNECTION_HOST))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=q_name, durable=True)  # queue would be safe if rabbit shuts down by durability
         self.q_name = q_name
@@ -26,20 +28,31 @@ class QChannel:
                                    properties=pika.BasicProperties(
                                        delivery_mode=2,  # make message persistent in case shut downs and other problems
                                    ))
-        logger.info(f'{message} received in queue {self.q_name}')
+        self.channel.confirm_delivery()
+        logger.info(f'{message} sent to queue {self.q_name}')
 
-    def receive(self, callback):
+    def start_receiving(self, callback):  # this will run forever and can be terminated manually
         self.channel.basic_consume(
-            queue=self.q_name, on_message_callback=callback)
+            queue=self.q_name, on_message_callback=self.receiver_callback(callback))
         logger.info('Waiting for messages. To exit press CTRL+C')
         self.channel.start_consuming()
 
-    @staticmethod
-    def receiver_callback(callback):
-        def res(*args, **kwargs):
-            logger.info(f'Received {args[3]}')
-            callback(*args, **kwargs)
-            args[0].basic_ack(delivery_tag=args[1].delivery_tag)  # the queue would remove a task
-            # after getting acknowledgement
+    def receiver_callback(self, callback):
+        def res(channel, method, properties, body):
+            logger.info(f'{body} received to queue {self.q_name}')
+            try:
+                callback(channel, method, properties, body)
+                channel.basic_ack(delivery_tag=method.delivery_tag)  # the queue would remove a task
+                # after getting acknowledgement
+            except Exception as ex:
+                logger.error(str(ex))
+                # In case of exception in running call back, We retry the task by nack. But if the task is redelivered,
+                # we skip it and sending ack.
+                # todo: we can add some feature to support specified time retrying the failures.
+                if not method.redelivered:
+                    logger.info(f'message {body} has been requeued')
+                    channel.basic_nack(delivery_tag=method.delivery_tag)
+                else:
+                    channel.basic_ack(delivery_tag=method.delivery_tag)
 
         return res

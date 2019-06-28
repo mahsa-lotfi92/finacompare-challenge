@@ -11,13 +11,9 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        @QChannel.receiver_callback
         def callback(ch, method, properties, body):
             obj = json.loads(body)
-            try:
-                Contact.objects.update_or_create(email=obj['email'], defaults={'name': obj['name']})
-            except IntegrityError as ex:
-                pass
+            Contact.objects.create(email=obj['email'], defaults={'name': obj['name']})
 
-        QChannel('emails').receive(callback)
+        QChannel('emails').start_receiving(callback)
 

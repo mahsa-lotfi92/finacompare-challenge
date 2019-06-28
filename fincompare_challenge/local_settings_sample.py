@@ -8,3 +8,5 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+RABBIT_CONNECTION_HOST = 'localhost'
