@@ -21,6 +21,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for file in options['csv_files']:
             # todo: we can get the queue name as an input
-            Reader(settings.RABBITMQ_QUEUE_NAME).file_to_queue(file)
+            Reader(settings.RABBITMQ_QUEUE_NAME).read_file(file)
             logger.info(f'{file} has been read.')
 

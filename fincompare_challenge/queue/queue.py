@@ -28,7 +28,6 @@ class QChannel:
                                    properties=pika.BasicProperties(
                                        delivery_mode=2,  # make message persistent in case shut downs and other problems
                                    ))
-        self.channel.confirm_delivery()
         logger.info(f'{message} sent to queue {self.q_name}')
 
     def start_receiving(self, callback):  # this will run forever and can be terminated manually
@@ -46,7 +45,7 @@ class QChannel:
                 # after getting acknowledgement
                 logger.info(f'{body} has been proceeded successfully.')
             except Exception as ex:
-                logger.error(str(ex))
+                logger.error(ex)
                 # In case of exception in running call back, We retry the task by nack. But if the task is redelivered,
                 # we skip it and sending ack.
                 # todo: we can add some feature to support specified time retrying the failures.
