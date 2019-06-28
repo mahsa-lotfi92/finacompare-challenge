@@ -1,10 +1,10 @@
-import logging
 import json
-from django.db.utils import IntegrityError
+import logging
 
-from consumer.models import Contact
-from queue.queue import QChannel
+from fincompare_challenge.consumer.models import Contact
 from django.core.management.base import BaseCommand
+from django.db.utils import IntegrityError
+from fincompare_challenge.queue.queue import QChannel
 
 logger = logging.getLogger(__name__)
 

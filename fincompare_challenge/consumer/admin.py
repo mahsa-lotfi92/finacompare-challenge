@@ -1,6 +1,5 @@
+from fincompare_challenge.consumer.models import Contact
 from django.contrib import admin
-
-from consumer.models import Contact
 
 
 @admin.register(Contact)

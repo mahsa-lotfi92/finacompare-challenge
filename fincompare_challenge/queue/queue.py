@@ -1,4 +1,7 @@
 import pika
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class QChannel:
@@ -23,18 +26,18 @@ class QChannel:
                                    properties=pika.BasicProperties(
                                        delivery_mode=2,  # make message persistent in case shut downs and other problems
                                    ))
-        print(f'{message} received in queue {self.q_name}')
+        logger.info(f'{message} received in queue {self.q_name}')
 
     def receive(self, callback):
         self.channel.basic_consume(
             queue=self.q_name, on_message_callback=callback)
-        print(' [*] Waiting for messages. To exit press CTRL+C')
+        logger.info('Waiting for messages. To exit press CTRL+C')
         self.channel.start_consuming()
 
     @staticmethod
     def receiver_callback(callback):
         def res(*args, **kwargs):
-            print(f'Received {args[3]}')
+            logger.info(f'Received {args[3]}')
             callback(*args, **kwargs)
             args[0].basic_ack(delivery_tag=args[1].delivery_tag)  # the queue would remove a task
             # after getting acknowledgement

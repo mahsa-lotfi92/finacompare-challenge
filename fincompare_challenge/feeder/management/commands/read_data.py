@@ -2,8 +2,7 @@ import argparse
 import logging
 
 from django.core.management.base import BaseCommand
-
-from feeder.reader import Reader
+from fincompare_challenge.feeder.reader import Reader
 
 logger = logging.getLogger(__name__)
 

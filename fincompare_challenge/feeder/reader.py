@@ -1,6 +1,7 @@
-from queue.queue import QChannel
 import csv
 import json
+
+from fincompare_challenge.queue.queue import QChannel
 
 
 class Reader:
